@@ -5,12 +5,19 @@ namespace Spydemon\CatalogProductDeleteAll\Helper;
 use Exception;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory as ProductCollectionFactory;
+use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Exception\StateException;
+use Magento\Framework\Filesystem;
 use Magento\Framework\Registry;
 use Psr\Log\LoggerInterface;
 
 class DeleteAllProducts
 {
+    /**
+     * @var Filesystem
+     */
+    protected $filesystem;
+
     /**
      * @var LoggerInterface
      */
@@ -32,11 +39,13 @@ class DeleteAllProducts
     protected $regitry;
 
     public function __construct(
+        Filesystem $filesystem,
         LoggerInterface $logger,
         ProductCollectionFactory $productCollectionFactory,
         ProductRepositoryInterface $productRepositoryInterface,
         Registry $registry
     ) {
+        $this->filesystem = $filesystem;
         $this->logger = $logger;
         $this->productCollectionFactory = $productCollectionFactory;
         $this->productRepositoryInterface = $productRepositoryInterface;
@@ -46,6 +55,7 @@ class DeleteAllProducts
     public function deleteAllProducts() : void
     {
         $this->cleanDatabase();
+        $this->cleanMedia();
     }
 
     protected function cleanDatabase() : void
@@ -66,6 +76,14 @@ class DeleteAllProducts
         }
         $this->registry->register('isSecureArea',false, true);
         $this->logMessageInfo('End delete all products in database.');
+    }
+
+    protected function cleanMedia() : void
+    {
+        $this->logMessageInfo('Start to delete all products media.');
+        $mediaDir = $this->filesystem->getDirectoryWrite(DirectoryList::MEDIA);
+        $mediaDir->delete('catalog/product');
+        $this->logMessageInfo('End delete all products media.');
     }
 
     protected function logMessageError(string $message) : void
