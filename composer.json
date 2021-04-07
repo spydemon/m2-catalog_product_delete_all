@@ -1,0 +1,26 @@
+{
+    "name": "spydemon/m2-catalog_product_delete_all",
+    "description": "Simple helper that contains a method that delete all products in the database and all product medias.",
+    "homepage": "https://github.com/spydemon/m2-catalog_product_delete_all",
+    "type": "magento2-module",
+    "authors": [
+        {
+            "name": "Kevin Hagner (Spydemon)",
+            "email": "jsaipakoimetr@spyzone.fr"
+        }
+    ],
+    "license": [
+        "MIT"
+    ],
+    "require": {
+        "magento/product-community-edition": "2.*"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Spydemon\\CatalogProductDeleteAll\\": ""
+        }
+    }
+}
